@@ -1,0 +1,250 @@
+# Pinot Tables Configuration
+# ==========================
+# define all Pinot tables 
+# run python generate_pinot_configs.py to create JSON files and bash for setup
+
+tables:
+  
+  # Table 1: Current State (Upsert)
+  sales_current_3:
+    database: "default"
+    description: "Current state of sales records with upsert"
+    table_type: "REALTIME"
+    mode: "upsert"
+    
+    # Kafka configuration
+    kafka:
+      topic: "pinot_sales_current"
+      bootstrap_servers: "localhost:9092"
+      consumer_type: "lowlevel"
+      offset_reset: "smallest"
+      partitions: 3
+      replication_factor: 1
+      cleanup_policy: "compact"
+    
+    # Time column for retention and partitioning
+    time_column:
+      name: "last_updated_ts"
+      type: "MILLISECONDS"
+      format: "1:MILLISECONDS:EPOCH"
+    
+    # Upsert configuration
+    upsert:
+      primary_key: ["id"]
+      comparison_column: "last_updated_ts"
+      enable_snapshot: true
+    
+    # Retention policy
+    retention:
+      time_value: 30
+      time_unit: "DAYS"
+    
+    # Schema definition
+    columns:
+      # Dimensions (for filtering, grouping)
+      - name: "id"
+        type: "INT"
+        field_type: "dimension"
+        
+      - name: "product_name"
+        type: "STRING"
+        field_type: "dimension"
+        
+      - name: "category"
+        type: "STRING"
+        field_type: "dimension"
+        
+      - name: "is_deleted"
+        type: "BOOLEAN"
+        field_type: "dimension"
+        default: false
+      
+      # Metrics (for aggregation)
+      - name: "price"
+        type: "DOUBLE"
+        field_type: "metric"
+        default: 0.0
+        
+      - name: "quantity"
+        type: "INT"
+        field_type: "metric"
+        default: 0
+        
+      - name: "sale_date"
+        type: "LONG"
+        field_type: "metric"
+        default: 0
+        
+      - name: "created_at"
+        type: "LONG"
+        field_type: "metric"
+        default: 0
+      
+      # DateTime column (must match time_column.name)
+      - name: "last_updated_ts"
+        type: "LONG"
+        field_type: "datetime"
+        format: "1:MILLISECONDS:EPOCH"
+        granularity: "1:MILLISECONDS"
+    
+    # Advanced settings (optional)
+    advanced:
+      flush_threshold_rows: 50000
+      segment_size: "50M"
+      replication: 1
+      load_mode: "MMAP"
+  
+  
+  # Table 2: CDC History (Append-only)
+  sales_history_3:
+    database: "default"
+    description: "Full CDC audit trail with all changes"
+    table_type: "REALTIME"
+    mode: "append"
+    
+    # Kafka configuration
+    kafka:
+      topic: "pinot_sales_history"
+      bootstrap_servers: "localhost:9092"
+      consumer_type: "lowlevel"
+      offset_reset: "smallest"
+      partitions: 3
+      replication_factor: 1
+    
+    # Time column
+    time_column:
+      name: "event_timestamp"
+      type: "MILLISECONDS"
+      format: "1:MILLISECONDS:EPOCH"
+    
+    # Retention policy
+    retention:
+      time_value: 90
+      time_unit: "DAYS"
+    
+    # Schema definition
+    columns:
+      # Dimensions
+      - name: "record_id"
+        type: "INT"
+        field_type: "dimension"
+        
+      - name: "after_product_name"
+        type: "STRING"
+        field_type: "dimension"
+        
+      - name: "after_category"
+        type: "STRING"
+        field_type: "dimension"
+        
+      - name: "before_product_name"
+        type: "STRING"
+        field_type: "dimension"
+        
+      - name: "before_category"
+        type: "STRING"
+        field_type: "dimension"
+        
+      - name: "op"
+        type: "STRING"
+        field_type: "dimension"
+        
+      - name: "op_description"
+        type: "STRING"
+        field_type: "dimension"
+        
+      - name: "source_db"
+        type: "STRING"
+        field_type: "dimension"
+        
+      - name: "source_table"
+        type: "STRING"
+        field_type: "dimension"
+      
+      # Metrics
+      - name: "after_id"
+        type: "INT"
+        field_type: "metric"
+        default: 0
+        
+      - name: "after_price"
+        type: "DOUBLE"
+        field_type: "metric"
+        default: 0.0
+        
+      - name: "after_quantity"
+        type: "INT"
+        field_type: "metric"
+        default: 0
+        
+      - name: "after_sale_date"
+        type: "LONG"
+        field_type: "metric"
+        default: 0
+        
+      - name: "after_created_at"
+        type: "LONG"
+        field_type: "metric"
+        default: 0
+        
+      - name: "before_id"
+        type: "INT"
+        field_type: "metric"
+        default: 0
+        
+      - name: "before_price"
+        type: "DOUBLE"
+        field_type: "metric"
+        default: 0.0
+        
+      - name: "before_quantity"
+        type: "INT"
+        field_type: "metric"
+        default: 0
+        
+      - name: "before_sale_date"
+        type: "LONG"
+        field_type: "metric"
+        default: 0
+        
+      - name: "before_created_at"
+        type: "LONG"
+        field_type: "metric"
+        default: 0
+        
+      - name: "tx_id"
+        type: "LONG"
+        field_type: "metric"
+        default: 0
+        
+      - name: "lsn"
+        type: "LONG"
+        field_type: "metric"
+        default: 0
+      
+      # DateTime columns
+      - name: "event_timestamp"
+        type: "LONG"
+        field_type: "datetime"
+        format: "1:MILLISECONDS:EPOCH"
+        granularity: "1:MILLISECONDS"
+        
+      - name: "processing_time"
+        type: "LONG"
+        field_type: "datetime"
+        format: "1:MILLISECONDS:EPOCH"
+        granularity: "1:MILLISECONDS"
+    
+    # Advanced settings
+    advanced:
+      flush_threshold_rows: 100000
+      segment_size: "100M"
+      replication: 1
+      load_mode: "MMAP"
+
+
+# Global settings (optional)
+global:
+  pinot_controller: "localhost:9000"
+  zookeeper: "localhost:2181"
+  output_dir: "./generated_configs"

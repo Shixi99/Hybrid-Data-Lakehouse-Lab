@@ -1,0 +1,15 @@
+connectors:  
+  - name: postgres-connector
+    config: 
+      connector.class: io.debezium.connector.postgresql.PostgresConnector
+      database.hostname: localhost
+      database.port: 5432
+      database.user: debezium_user
+      database.password: your_password_here
+      database.dbname: postgres
+      database.server.name: postgres
+      table.include.list: public.source_sales
+      plugin.name: pgoutput
+      topic.prefix: mydb
+      publication.name: dbz_publication
+      decimal.handling.mode: string
