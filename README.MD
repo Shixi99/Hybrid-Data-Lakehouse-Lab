@@ -346,5 +346,7 @@ The following additions would bring this platform to full enterprise readiness:
 - [Apache Flink SQL Connectors](https://nightlies.apache.org/flink/flink-docs-release-1.18/docs/connectors/table/overview/)
 - [Apache Iceberg Table Spec](https://iceberg.apache.org/spec/)
 - [Project Nessie REST API v2](https://projectnessie.org/develop/rest/)
+- [Project Nessie CLI](https://projectnessie.org/nessie-0-105-6-0-105-7/cli/)
+- [Trino](https://trino.io/docs/current/release/release-443.html)
 - [Trino Iceberg Connector](https://trino.io/docs/current/connector/iceberg.html)
 - [Apache Pinot Upsert Tables](https://docs.pinot.apache.org/basics/data-import/upsert)
