@@ -1,0 +1,117 @@
+{
+  "schemaName": "sales_history",
+  "dimensionFieldSpecs": [
+    {
+      "name": "record_id",
+      "dataType": "INT"
+    },
+    {
+      "name": "after_product_name",
+      "dataType": "STRING"
+    },
+    {
+      "name": "after_category",
+      "dataType": "STRING"
+    },
+    {
+      "name": "before_product_name",
+      "dataType": "STRING"
+    },
+    {
+      "name": "before_category",
+      "dataType": "STRING"
+    },
+    {
+      "name": "op",
+      "dataType": "STRING"
+    },
+    {
+      "name": "op_description",
+      "dataType": "STRING"
+    },
+    {
+      "name": "source_db",
+      "dataType": "STRING"
+    },
+    {
+      "name": "source_table",
+      "dataType": "STRING"
+    }
+  ],
+  "metricFieldSpecs": [
+    {
+      "name": "after_id",
+      "dataType": "INT",
+      "defaultNullValue": 0
+    },
+    {
+      "name": "after_price",
+      "dataType": "DOUBLE",
+      "defaultNullValue": 0.0
+    },
+    {
+      "name": "after_quantity",
+      "dataType": "INT",
+      "defaultNullValue": 0
+    },
+    {
+      "name": "after_sale_date",
+      "dataType": "LONG",
+      "defaultNullValue": 0
+    },
+    {
+      "name": "after_created_at",
+      "dataType": "LONG",
+      "defaultNullValue": 0
+    },
+    {
+      "name": "before_id",
+      "dataType": "INT",
+      "defaultNullValue": 0
+    },
+    {
+      "name": "before_price",
+      "dataType": "DOUBLE",
+      "defaultNullValue": 0.0
+    },
+    {
+      "name": "before_quantity",
+      "dataType": "INT",
+      "defaultNullValue": 0
+    },
+    {
+      "name": "before_sale_date",
+      "dataType": "LONG",
+      "defaultNullValue": 0
+    },
+    {
+      "name": "before_created_at",
+      "dataType": "LONG",
+      "defaultNullValue": 0
+    },
+    {
+      "name": "tx_id",
+      "dataType": "LONG",
+      "defaultNullValue": 0
+    },
+    {
+      "name": "lsn",
+      "dataType": "LONG",
+      "defaultNullValue": 0
+    }
+  ],
+  "dateTimeFieldSpecs": [
+    {
+      "name": "event_timestamp",
+      "dataType": "LONG",
+      "format": "1:MILLISECONDS:EPOCH",
+      "granularity": "1:MILLISECONDS"
+    },
+    {
+      "name": "processing_time",
+      "dataType": "LONG",
+      "format": "1:MILLISECONDS:EPOCH",
+      "granularity": "1:MILLISECONDS"
+    }
+  ]
+}
